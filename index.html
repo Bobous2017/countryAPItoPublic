@@ -1,0 +1,204 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Status Api</title>
+    
+</head>
+<style>
+    * {
+    padding: 0%;
+    margin: 0%;
+    box-sizing: border-box;
+    
+}
+
+
+body {
+    background-color: #356;
+    
+}
+
+
+
+.ctn {
+    background-color: rgb(255, 255, 255);
+    width: 50vw;
+    max-width: 40.5em;
+    min-width: 20.5em;
+    padding: 3em 2.5em;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 0.62em;
+    box-shadow: 0 1.25em 1.8em rgb(30, 73, 95);
+    font-family: "Poppins", sans-serif;
+    
+}
+
+.searchWrap {
+    display: grid;
+    grid-template-columns: 9fr 3fr;
+    
+}
+
+.searchWrap button{
+    font-size: 0.8em;
+    background-color: #356;
+    color: rgb(255, 255, 255);
+    padding: 0.8em 0;
+    border: none;
+    border-radius: 1.5em;
+}
+.searchWrap input{
+    font-size: 1em;
+    padding: 0 1.10em 0;
+    border: none;
+    border-bottom: 2px solid #356;
+}
+
+
+#result {
+    margin-top: 1.25em;
+}
+
+.ctn .flag-img {
+    display: block;
+    width: 45%;
+    min-width: 7.5em;
+    margin: 1.8em auto 1.2em auto;
+}
+
+
+.ctn h2 {
+    font-weight: 600;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.8em;
+    
+}
+
+
+.dataWrap{
+    font-weight: 600;
+    color: rgb(255, 0, 0);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.8em;
+    
+}
+
+.ctn h4{
+    display: inline;
+    font-weight: 500;
+    color: #356;
+}
+
+.ctn span{
+    color: #356;
+}
+
+
+.ctn h3{
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: 400;
+    color:rgb(255, 0, 0)
+}
+</style>
+<body>
+    <div class="ctn">
+        <div class="searchWrap">
+            <input type="text"
+            id="inpCountry"
+            placeholder="Enter a country name here..."
+            />
+            <button id="searchBtn">Search</button>
+        </div>
+        <div id="result"></div>
+    </div>
+    <script>
+        let sBtn = document.getElementById("searchBtn");
+        let countryInp = document.getElementById("inpCountry");
+
+
+        sBtn.addEventListener("click", () => {
+            let countryName = countryInp.value;
+            let finalURl = `https://restcountries.com/v3.1/name/${countryName}?fullText=true`;
+            console.log(finalURl);
+
+            fetch(finalURl)
+                .then((response) => response.json())
+                .then((data) => {
+                    // console.log(data[0]);
+                    // console.log(data[0].capital[0]);
+                    // console.log(data[0].flags.svg);
+                    // console.log(data[0].name.common);
+                    // console.log(data[0].continents[0]);
+                    // console.log(Object.keys(data[0].currencies)[0]);
+                    // console.log(data[0].currencies[Object.keys(data[0].currencies)].name);
+                    // console.log(Object.values(data[0].languages).toString().split(",").join(",")); 
+                    
+                    result.innerHTML = `
+                        <img src="${data[0].flags.svg}" class="flag-img">
+                        <h2>${data[0].name.common}</h2>
+
+                        <div class="wrap">
+                            <div class="dataWrap">
+                                <h4>Capital:</h4>
+                                <span>${data[0].capital[0]}</span>
+                            </div>
+                        </div>
+
+                        <div class="wrap">
+                            <div class="dataWrap">
+                                <h4>Continents:</h4>
+                                <span>${data[0].continents[0]}</span>
+                            </div>
+                        </div>
+
+                        <div class="wrap">
+                            <div class="dataWrap">
+                                <h4>Population:</h4>
+                                <span>${data[0].population}</span>
+                            </div>
+                        </div>
+
+                        <div class="wrap">
+                            <div class="dataWrap">
+                                <h4>Currency:</h4>
+                                <span>${data[0].currencies[Object.keys(data[0].currencies)].name} - 
+                                ${Object.keys(data[0].currencies)[0]}
+                                </span>
+                            </div>
+                        </div>
+
+
+                        <div class="wrap">
+                            <div class="dataWrap">
+                                <h4>Common Languages:</h4>
+                                <span>${Object.values(data[0].languages).toString().split(",").join(",")}
+                                </span>
+                            </div>
+                        </div>
+
+                    `;
+                }).catch(() => {
+                    if(countryName.length == 0){
+                        result.innerHTML = `<h3>No matches</h3> `;
+                    }else{
+                        result.innerHTML = `<h3>Please Enter a valid country name.</h3> `;
+                    }
+                })
+        });
+
+    </script>  
+   
+</body>
+
+</html>
